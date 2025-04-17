@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Image Processor</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    
+</head>
+<body >
+    <body>
+        <div class="container" id="mainContainer">
+            <div class="upload-section" id="uploadSection">
+                <h1>Upload Image for Multiple Effects</h1>
+                <form id="uploadForm" enctype="multipart/form-data">
+                    <input type="file" name="image" accept="image/*" required><br><br>
+                    <button type="submit">Upload and Process</button>
+                    <button type="button" id="uploadAnotherBtn" style="display:none;">Upload Another</button>
+                    <button type="button"><a href="/" id="refreshLink">Refresh</a></button>
+                </form>
+            </div>
+    
+            <div id="results" style="display:none;">
+                <h2>Processed Images:</h2>
+                <div class="image-row">
+                    <div class="flip-card">
+                        <div class="flip-card-inner">
+                            <div class="flip-card-front">
+                                <h3>Grayscale</h3>
+                                <img id="gray" src="">
+                            </div>
+                            <div class="flip-card-back">
+                                <p>Grayscale effect using <code>cv2.cvtColor</code></p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="flip-card">
+                        <div class="flip-card-inner">
+                            <div class="flip-card-front">
+                                <h3>Edges</h3>
+                                <img id="edges" src="">
+                            </div>
+                            <div class="flip-card-back">
+                                <p>Edge detection with <code>cv2.Canny</code></p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="flip-card">
+                        <div class="flip-card-inner">
+                            <div class="flip-card-front">
+                                <h3>Blurred</h3>
+                                <img id="blur" src="">
+                            </div>
+                            <div class="flip-card-back">
+                                <p>Gaussian Blur using <code>cv2.GaussianBlur</code></p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="flip-card">
+                        <div class="flip-card-inner">
+                            <div class="flip-card-front">
+                                <h3>Cartoonized</h3>
+                                <img id="cartoon" src="">
+                            </div>
+                            <div class="flip-card-back">
+                                <p>Cartoon effect with <code>cv2.bilateralFilter</code></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        
+    <script>
+        const form = document.getElementById('uploadForm');
+        const uploadAnotherBtn = document.getElementById('uploadAnotherBtn');
+
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const formData = new FormData(form);
+
+            const res = await fetch('/process', {
+                method: 'POST',
+                body: formData
+            });
+
+            const data = await res.json();
+
+            document.getElementById('results').style.display = 'block';
+            document.getElementById('gray').src = data.gray + '?v=' + new Date().getTime();
+            document.getElementById('edges').src = data.edges + '?v=' + new Date().getTime();
+            document.getElementById('blur').src = data.blur + '?v=' + new Date().getTime();
+            document.getElementById('cartoon').src = data.cartoon + '?v=' + new Date().getTime();
+
+            uploadAnotherBtn.style.display = 'inline-block';
+        });
+
+        uploadAnotherBtn.addEventListener('click', () => {
+            document.getElementById('results').style.display = 'none';
+            uploadAnotherBtn.style.display = 'none';
+            form.reset();
+        });
+    </script>
+</body>
+</html>
