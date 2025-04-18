@@ -13,7 +13,7 @@
                 <h1>Upload Image for Multiple Effects</h1>
                 <form id="uploadForm" enctype="multipart/form-data">
                     <input type="file" name="image" accept="image/*" required><br><br>
-                    <button type="submit">Upload and Process</button>
+                    <button type="submit">Upload && Process</button>
                     <button type="button" id="uploadAnotherBtn" style="display:none;">Upload Another</button>
                     <button type="button"><a href="/" id="refreshLink">Refresh</a></button>
                 </form>
@@ -51,7 +51,9 @@
                                 <img id="blur" src="">
                             </div>
                             <div class="flip-card-back">
-                                <p>Gaussian Blur using <code>cv2.GaussianBlur</code></p>
+                                <p>Gaussian Blur using 
+                                    <code>cv2.GaussianBlur</code>
+                                </p>
                             </div>
                         </div>
                     </div>
@@ -62,7 +64,9 @@
                                 <img id="cartoon" src="">
                             </div>
                             <div class="flip-card-back">
-                                <p>Cartoon effect with <code>cv2.bilateralFilter</code></p>
+                                <p>Cartoon effect with 
+                                    <code>cv2.bilateralFilter</code>
+                                </p>
                             </div>
                         </div>
                     </div>
