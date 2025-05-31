@@ -4,7 +4,23 @@
     <meta charset="UTF-8">
     <title>Image Processor</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-    
+    <style>
+    .spinner {
+        border: 8px solid #f3f3f3;
+        border-top: 8px solid #3498db;
+        border-radius: 50%;
+        width: 60px;
+        height: 60px;
+        animation: spin 1s linear infinite;
+        margin: 0 auto;
+    }
+
+    @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+    }
+</style>
+
 </head>
 <body >
     <body>
@@ -72,10 +88,57 @@
                     </div>
                 </div>
             </div>
+            <div id="loader" style="display:none; text-align:center; margin-top:20px;">
+                <div class="spinner"></div>
+                <p>Processing image, please wait...</p>
+            </div>
         </div>
 
+<script>
+    const form = document.getElementById('uploadForm');
+    const uploadAnotherBtn = document.getElementById('uploadAnotherBtn');
+    const loader = document.getElementById('loader');
+
+    form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        loader.style.display = 'block';  // Show loader
+
+        const formData = new FormData(form);
+
+        try {
+            const res = await fetch('/process', {
+                method: 'POST',
+                body: formData
+            });
+
+            const data = await res.json();
+
+            document.getElementById('results').style.display = 'block';
+            document.getElementById('gray').src = data.gray + '?v=' + new Date().getTime();
+            document.getElementById('edges').src = data.edges + '?v=' + new Date().getTime();
+            document.getElementById('blur').src = data.blur + '?v=' + new Date().getTime();
+            document.getElementById('cartoon').src = data.cartoon + '?v=' + new Date().getTime();
+
+            uploadAnotherBtn.style.display = 'inline-block';
+        } catch (error) {
+            alert('Error processing image');
+        } finally {
+            loader.style.display = 'none'; // Hide loader after fetch completes
+        }
+    });
+
+    uploadAnotherBtn.addEventListener('click', () => {
+        document.getElementById('results').style.display = 'none';
+        uploadAnotherBtn.style.display = 'none';
+        form.reset();
+    });
+</script>
+
         
-    <script>
+    </body>
+    </html>
+    
+    <!-- <script>
         const form = document.getElementById('uploadForm');
         const uploadAnotherBtn = document.getElementById('uploadAnotherBtn');
 
@@ -104,6 +167,4 @@
             uploadAnotherBtn.style.display = 'none';
             form.reset();
         });
-    </script>
-</body>
-</html>
+    </script> -->
